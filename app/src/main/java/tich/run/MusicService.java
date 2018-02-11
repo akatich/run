@@ -96,7 +96,7 @@ public class MusicService extends Service implements
         long currSong = playSong.getId();
         //set uri
         Uri trackUri = ContentUris.withAppendedId(
-                android.provider.MediaStore.Audio.Media.INTERNAL_CONTENT_URI,
+                android.provider.MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
                 currSong);
         try{
             player.setDataSource(getApplicationContext(), trackUri);
@@ -107,7 +107,22 @@ public class MusicService extends Service implements
         player.prepareAsync();
     }
 
+    public void stopSong()
+    {
+        player.stop();
+    }
+
     public void setSong(int songIndex){
         songPosn=songIndex;
+    }
+
+    public int getSong()
+    {
+        return songPosn;
+    }
+
+    public boolean isPlaying()
+    {
+        return player.isPlaying();
     }
 }

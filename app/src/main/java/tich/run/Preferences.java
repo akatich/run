@@ -8,10 +8,12 @@ public class Preferences {
 
     private static SharedPreferences sharedPreferences = null;
     private static Preferences myPreferences = null;
-    private final static String RUN = "tich.run";
+    private final static String SONGS = "tich.run.songs";
+    private final static String STEPS = "tich.run.steps";
 
     private Preferences()
     {
+        loadSteps();
     }
 
     public static synchronized Preferences getPreferences()
@@ -28,9 +30,14 @@ public class Preferences {
         return getPreferences();
     }
 
+    private void loadSteps()
+    {
+
+    }
+
     public int getSongSpeed(String songTitle)
     {
-        String songSpeed = sharedPreferences.getString(RUN + "." + encodeSongTitle(songTitle), "0");
+        String songSpeed = sharedPreferences.getString(SONGS + "." + encodeSongTitle(songTitle), "0");
         if (songTitle.equals("Alarms on call"))
             System.out.println("songSpeed = " + songSpeed);
         return Integer.parseInt(songSpeed);
@@ -39,7 +46,7 @@ public class Preferences {
     public void updateSong(String songTitle, int songSpeed)
     {
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString(RUN + "." + encodeSongTitle(songTitle), Integer.toString(songSpeed));
+        editor.putString(SONGS + "." + encodeSongTitle(songTitle), Integer.toString(songSpeed));
         editor.commit();
     }
 
