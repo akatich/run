@@ -127,7 +127,8 @@ public class MainActivity extends AppCompatActivity {
                     long thisId = musicCursor.getLong(idColumn);
                     String thisTitle = musicCursor.getString(titleColumn);
                     String thisArtist = musicCursor.getString(artistColumn);
-                    songList.add(new Song(thisId, thisTitle, thisArtist));
+                    int songSpeed = Preferences.getPreferences(this).getSongSpeed(thisTitle);
+                    songList.add(new Song(thisId, thisTitle, thisArtist, songSpeed));
                 }
                 while (musicCursor.moveToNext());
             }

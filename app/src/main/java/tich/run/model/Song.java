@@ -6,16 +6,23 @@ public class Song {
     private String title;
     private String artist;
     private int speed;
-    public static int UNDEFINED = 0;
-    public static int SLOW = 1;
-    public static int MEDIUM = 2;
-    public static int FAST = 3;
+    public final static int UNDEFINED = 0;
+    public final static int SLOW = 1;
+    public final static int MEDIUM = 2;
+    public final static int FAST = 3;
 
     public Song(long songId, String songTitle, String songArtist) {
         id=songId;
         title=songTitle;
         artist=songArtist;
         speed = UNDEFINED;
+    }
+
+    public Song(long songId, String songTitle, String songArtist, int songSpeed) {
+        id=songId;
+        title=songTitle;
+        artist=songArtist;
+        speed = songSpeed;
     }
 
     public long getId() {

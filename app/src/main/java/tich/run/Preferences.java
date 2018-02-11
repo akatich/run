@@ -28,4 +28,23 @@ public class Preferences {
         return getPreferences();
     }
 
+    public int getSongSpeed(String songTitle)
+    {
+        String songSpeed = sharedPreferences.getString(RUN + "." + encodeSongTitle(songTitle), "0");
+        if (songTitle.equals("Alarms on call"))
+            System.out.println("songSpeed = " + songSpeed);
+        return Integer.parseInt(songSpeed);
+    }
+
+    public void updateSong(String songTitle, int songSpeed)
+    {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(RUN + "." + encodeSongTitle(songTitle), Integer.toString(songSpeed));
+        editor.commit();
+    }
+
+    private String encodeSongTitle(String songTitle)
+    {
+        return songTitle.replace(" ", "").replace("'", "");
+    }
 }

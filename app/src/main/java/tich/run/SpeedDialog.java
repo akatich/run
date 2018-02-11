@@ -83,9 +83,11 @@ public class SpeedDialog extends DialogFragment {
             @Override
             public void onClick(View v)
             {
-                activity.getSongList().get(songId).setSpeed(Song.FAST);
+                Song song = activity.getSongList().get(songId);
+                song.setSpeed(Song.FAST);
                 songSpeedView.setBackgroundResource(R.drawable.background_fast);
                 songSpeedView.setImageResource(R.drawable.fast);
+                Preferences.getPreferences(activity).updateSong(song.getTitle(), Song.FAST);
                 getDialog().cancel();
             }
         });

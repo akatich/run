@@ -6,6 +6,7 @@ import android.widget.BaseAdapter;
 import java.util.ArrayList;
 import android.content.Context;
 import android.view.LayoutInflater;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import tich.run.R;
@@ -52,6 +53,27 @@ public class SongAdapter extends BaseAdapter {
         artistView.setText(currSong.getArtist());
         //set position as tag
         songLay.setTag(position);
+        //display correct image
+        ImageView songSpeed = (ImageView) songLay.findViewById(R.id.song_speed);
+        switch (currSong.getSpeed())
+        {
+            case Song.UNDEFINED:
+                songSpeed.setBackgroundResource(R.drawable.background_undefined);
+                songSpeed.setImageResource(R.drawable.undefined);
+                break;
+            case Song.SLOW:
+                songSpeed.setBackgroundResource(R.drawable.background_slow);
+                songSpeed.setImageResource(R.drawable.slow);
+                break;
+            case Song.MEDIUM:
+                songSpeed.setBackgroundResource(R.drawable.background_medium);
+                songSpeed.setImageResource(R.drawable.medium);
+                break;
+            case Song.FAST:
+                songSpeed.setBackgroundResource(R.drawable.background_fast);
+                songSpeed.setImageResource(R.drawable.fast);
+                break;
+        }
         return songLay;
     }
 }
