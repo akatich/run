@@ -89,6 +89,8 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case R.id.step2:
                 //step2
+                Intent intent = new Intent(this, TrainingActivity.class);
+                startActivity(intent);
                 break;
             case R.id.step3:
                 //step3

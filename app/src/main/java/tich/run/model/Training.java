@@ -1,24 +1,20 @@
 package tich.run.model;
 
 import java.util.LinkedList;
-import java.util.List;
 
-public class Program {
+public class Training {
 
     private int id;
-    private LinkedList<Step> steps;
+    private LinkedList<Step> steps = new LinkedList<Step>();
 
     public void addStep(Step step)
     {
-        if (steps == null)
-            steps = new LinkedList<Step>();
+        step.setId(steps.size() + 1);
         steps.add(step);
     }
 
     public void addStep(int position, Step step)
     {
-        if (steps == null)
-            steps = new LinkedList<Step>();
         steps.add(position, step);
     }
 

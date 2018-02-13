@@ -7,6 +7,7 @@ import android.media.SoundPool;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -16,20 +17,27 @@ import android.widget.Switch;
 import android.widget.ToggleButton;
 
 import tich.run.model.Song;
+import tich.run.model.Step;
 
 public class SpeedDialog extends DialogFragment {
 
-    private MainActivity activity;
+    private AppCompatActivity activity;
     private int songId;
     private ImageView songSpeedView;
+    private Step step;
 
-
-    public SpeedDialog(MainActivity activity, int songId, ImageView songSpeedView)
+    public SpeedDialog(AppCompatActivity activity, int songId, ImageView songSpeedView)
     {
         super();
         this.activity = activity;
         this.songId = songId;
         this.songSpeedView = songSpeedView;
+    }
+
+    public SpeedDialog(AppCompatActivity activity, Step step, ImageView songSpeedView)
+    {
+        this(activity, -1, songSpeedView);
+        this.step = step;
     }
 
     @Override
@@ -47,11 +55,18 @@ public class SpeedDialog extends DialogFragment {
             @Override
             public void onClick(View v)
             {
-                Song song = activity.getSongList().get(songId);
-                song.setSpeed(Song.UNDEFINED);
+                if (songId != -1)
+                {
+                    Song song = ((MainActivity)activity).getSongList().get(songId);
+                    song.setSpeed(Song.UNDEFINED);
+                    Preferences.getPreferences(activity).updateSong(song.getTitle(), Song.UNDEFINED);
+                }
+                else
+                {
+                    step.setSpeed(Song.UNDEFINED);
+                }
                 songSpeedView.setBackgroundResource(R.drawable.background_undefined);
                 songSpeedView.setImageResource(R.drawable.undefined);
-                Preferences.getPreferences(activity).updateSong(song.getTitle(), Song.UNDEFINED);
                 getDialog().cancel();
             }
         });
@@ -61,11 +76,18 @@ public class SpeedDialog extends DialogFragment {
             @Override
             public void onClick(View v)
             {
-                Song song = activity.getSongList().get(songId);
-                song.setSpeed(Song.SLOW);
+                if (songId != -1)
+                {
+                    Song song = ((MainActivity)activity).getSongList().get(songId);
+                    song.setSpeed(Song.SLOW);
+                    Preferences.getPreferences(activity).updateSong(song.getTitle(), Song.SLOW);
+                }
+                else
+                {
+                    step.setSpeed(Song.SLOW);
+                }
                 songSpeedView.setBackgroundResource(R.drawable.background_slow);
                 songSpeedView.setImageResource(R.drawable.slow);
-                Preferences.getPreferences(activity).updateSong(song.getTitle(), Song.SLOW);
                 getDialog().cancel();
             }
         });
@@ -75,11 +97,18 @@ public class SpeedDialog extends DialogFragment {
             @Override
             public void onClick(View v)
             {
-                Song song = activity.getSongList().get(songId);
-                song.setSpeed(Song.MEDIUM);
+                if (songId != -1)
+                {
+                    Song song = ((MainActivity)activity).getSongList().get(songId);
+                    song.setSpeed(Song.MEDIUM);
+                    Preferences.getPreferences(activity).updateSong(song.getTitle(), Song.MEDIUM);
+                }
+                else
+                {
+                    step.setSpeed(Song.MEDIUM);
+                }
                 songSpeedView.setBackgroundResource(R.drawable.background_medium);
                 songSpeedView.setImageResource(R.drawable.medium);
-                Preferences.getPreferences(activity).updateSong(song.getTitle(), Song.MEDIUM);
                 getDialog().cancel();
             }
         });
@@ -89,11 +118,18 @@ public class SpeedDialog extends DialogFragment {
             @Override
             public void onClick(View v)
             {
-                Song song = activity.getSongList().get(songId);
-                song.setSpeed(Song.FAST);
+                if (songId != -1)
+                {
+                    Song song = ((MainActivity)activity).getSongList().get(songId);
+                    song.setSpeed(Song.FAST);
+                    Preferences.getPreferences(activity).updateSong(song.getTitle(), Song.FAST);
+                }
+                else
+                {
+                    step.setSpeed(Song.FAST);
+                }
                 songSpeedView.setBackgroundResource(R.drawable.background_fast);
                 songSpeedView.setImageResource(R.drawable.fast);
-                Preferences.getPreferences(activity).updateSong(song.getTitle(), Song.FAST);
                 getDialog().cancel();
             }
         });
