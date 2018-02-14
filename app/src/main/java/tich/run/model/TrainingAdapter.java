@@ -1,15 +1,18 @@
 package tich.run.model;
 
 import android.graphics.Color;
+import android.text.Editable;
+import android.text.InputType;
+import android.text.TextWatcher;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.TableLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -18,9 +21,9 @@ import java.util.ListIterator;
 
 import tich.run.Preferences;
 import tich.run.R;
-import tich.run.SpeedDialog;
 import tich.run.TrainingActivity;
-import tich.run.listener.StepListener;
+import tich.run.listener.StepLengthListener;
+import tich.run.listener.StepSpeedListener;
 
 public class TrainingAdapter extends BaseAdapter {
 
@@ -78,9 +81,8 @@ public class TrainingAdapter extends BaseAdapter {
             LinearLayout stepLayout = new LinearLayout(activity);
             stepLayout.setLayoutParams(new LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.MATCH_PARENT,
-                    Preferences.pxFromDp(35, activity)));
+                    Preferences.pxFromDp(40, activity)));
             ((LinearLayout.LayoutParams)stepLayout.getLayoutParams()).leftMargin = Preferences.pxFromDp(30, activity);
-            ((LinearLayout.LayoutParams)stepLayout.getLayoutParams()).topMargin = Preferences.pxFromDp(5, activity);
             stepLayout.setGravity(Gravity.CENTER_VERTICAL);
 
             TextView stepIdView = new TextView(activity);
@@ -88,15 +90,26 @@ public class TrainingAdapter extends BaseAdapter {
             stepIdView.setText("Step " + step.getId() + " : ");
             stepLayout.addView(stepIdView);
 
-            TextView stepLengthView = new TextView(activity);
+            EditText stepLengthView = new EditText(activity);
             stepLengthView.setLayoutParams(new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.WRAP_CONTENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT));
+            ((LinearLayout.LayoutParams)stepLengthView.getLayoutParams()).leftMargin = Preferences.pxFromDp(10, activity);
+            stepLengthView.setTextColor(Color.parseColor("#FFFFFF99"));
+            stepLengthView.setInputType(InputType.TYPE_CLASS_NUMBER);
+            stepLengthView.setText(Integer.toString(step.getLength()));
+            stepLengthView.addTextChangedListener(new StepLengthListener(activity, step));
+            stepLayout.addView(stepLengthView);
+
+            TextView stepLengthTextView = new TextView(activity);
+            stepLengthTextView.setLayoutParams(new LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.WRAP_CONTENT,
                     LinearLayout.LayoutParams.WRAP_CONTENT,
                     1f));
-            ((LinearLayout.LayoutParams)stepLengthView.getLayoutParams()).leftMargin = Preferences.pxFromDp(10, activity);
-            stepLengthView.setTextColor(Color.parseColor("#FFFFFF99"));
-            stepLengthView.setText("XXmin");
-            stepLayout.addView(stepLengthView);
+            ((LinearLayout.LayoutParams)stepLengthTextView.getLayoutParams()).leftMargin = Preferences.pxFromDp(10, activity);
+            stepLengthTextView.setTextColor(Color.parseColor("#FFFFFF99"));
+            stepLengthTextView.setText("min");
+            stepLayout.addView(stepLengthTextView);
 
             ImageView stepSpeedView = new ImageView(activity);
             stepSpeedView.setLayoutParams(new LinearLayout.LayoutParams(
@@ -121,7 +134,7 @@ public class TrainingAdapter extends BaseAdapter {
                     stepSpeedView.setImageResource(R.drawable.fast);
                     break;
             }
-            stepSpeedView.setOnClickListener(new StepListener(activity, step));
+            stepSpeedView.setOnClickListener(new StepSpeedListener(activity, step));
             stepLayout.addView(stepSpeedView);
             stepsListLayout.addView(stepLayout);
         }

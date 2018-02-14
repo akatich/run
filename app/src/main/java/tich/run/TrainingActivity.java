@@ -63,6 +63,7 @@ public class TrainingActivity extends AppCompatActivity {
         Training training = new Training();
         training.setId(trainingList.size() + 1);
         trainingList.add(training);
+        Preferences.getPreferences(this).saveTrainings();
         trainingView.setAdapter(trainingAdt);
     }
 
@@ -71,6 +72,7 @@ public class TrainingActivity extends AppCompatActivity {
         int position = (int) ((LinearLayout)v.getParent().getParent()).getTag();
         Training training = trainingList.get(position);
         training.addStep(new Step());
+        Preferences.getPreferences(this).saveTrainings();
         trainingView.setAdapter(trainingAdt);
     }
 

@@ -7,6 +7,7 @@ import android.preference.PreferenceManager;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ListIterator;
 
 import tich.run.model.Step;
 import tich.run.model.Training;
@@ -60,8 +61,8 @@ public class Preferences {
         do {
             // Récupérer les fichiers training
             // Ex : tich.run.training.1 = dureeStep1,allureStep1 ; dureeStep2,allureStep2 ; ...
-            trainingStr = sharedPreferences.getString(TRAINING + "." + trainingId, "null");
-            if (!trainingStr.equals("null"))
+            trainingStr = sharedPreferences.getString(TRAINING + "." + trainingId, "");
+            if (!trainingStr.equals(""))
             {
                 Training training = new Training();
                 training.setId(trainingId);
@@ -79,7 +80,7 @@ public class Preferences {
                 trainingId++;
             }
         }
-        while (!trainingStr.equals("null"));
+        while (!trainingStr.equals(""));
     }
 
     public int getSongSpeed(String songTitle)
@@ -106,5 +107,25 @@ public class Preferences {
 
     public static int pxFromDp(float dp, Context mContext) {
         return (int) ((int) dp * mContext.getResources().getDisplayMetrics().density);
+    }
+
+    public void saveTrainings()
+    {
+        for (int i=0; i<trainings.size(); i++)
+        {
+            Training training = trainings.get(i);
+            StringBuffer buff = new StringBuffer();
+            ListIterator<Step> iter = training.getSteps().listIterator();
+            while (iter.hasNext())
+            {
+                Step step = iter.next();
+                if (buff.length() > 0)
+                    buff.append(";");
+                buff.append(Integer.toString(step.getLength()) + "," + step.getSpeed());
+            }
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putString(TRAINING + "." + (i + 1), buff.toString());
+            editor.commit();
+        }
     }
 }

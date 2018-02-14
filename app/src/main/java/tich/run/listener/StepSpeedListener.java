@@ -7,12 +7,12 @@ import tich.run.SpeedDialog;
 import tich.run.TrainingActivity;
 import tich.run.model.Step;
 
-public class StepListener implements View.OnClickListener {
+public class StepSpeedListener implements View.OnClickListener {
 
     private TrainingActivity activity;
     private Step step;
 
-    public StepListener(TrainingActivity activity, Step step)
+    public StepSpeedListener(TrainingActivity activity, Step step)
     {
         this.activity = activity;
         this.step = step;

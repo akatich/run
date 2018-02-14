@@ -64,6 +64,7 @@ public class SpeedDialog extends DialogFragment {
                 else
                 {
                     step.setSpeed(Song.UNDEFINED);
+                    Preferences.getPreferences(activity).saveTrainings();
                 }
                 songSpeedView.setBackgroundResource(R.drawable.background_undefined);
                 songSpeedView.setImageResource(R.drawable.undefined);
@@ -85,6 +86,7 @@ public class SpeedDialog extends DialogFragment {
                 else
                 {
                     step.setSpeed(Song.SLOW);
+                    Preferences.getPreferences(activity).saveTrainings();
                 }
                 songSpeedView.setBackgroundResource(R.drawable.background_slow);
                 songSpeedView.setImageResource(R.drawable.slow);
@@ -106,6 +108,7 @@ public class SpeedDialog extends DialogFragment {
                 else
                 {
                     step.setSpeed(Song.MEDIUM);
+                    Preferences.getPreferences(activity).saveTrainings();
                 }
                 songSpeedView.setBackgroundResource(R.drawable.background_medium);
                 songSpeedView.setImageResource(R.drawable.medium);
@@ -127,6 +130,7 @@ public class SpeedDialog extends DialogFragment {
                 else
                 {
                     step.setSpeed(Song.FAST);
+                    Preferences.getPreferences(activity).saveTrainings();
                 }
                 songSpeedView.setBackgroundResource(R.drawable.background_fast);
                 songSpeedView.setImageResource(R.drawable.fast);
