@@ -73,7 +73,15 @@ public class TrainingActivity extends AppCompatActivity {
         Training training = trainingList.get(position);
         training.addStep(new Step());
         Preferences.getPreferences(this).saveTrainings();
-        trainingView.setAdapter(trainingAdt);
+        v.requestLayout();
+    }
+
+    public void deleteTraining(View v)
+    {
+        int position = (int) ((LinearLayout)v.getParent().getParent()).getTag();
+        trainingList.remove(position);
+        Preferences.getPreferences(this).saveTrainings();
+        v.requestLayout();
     }
 
 }

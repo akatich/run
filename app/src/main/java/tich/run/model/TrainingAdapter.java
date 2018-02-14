@@ -62,13 +62,13 @@ public class TrainingAdapter extends BaseAdapter {
         LinearLayout trainingLay = (LinearLayout)trainingInf.inflate
                 (R.layout.training, parent, false);
 
-        TextView trainingIdView = (TextView)trainingLay.findViewById(R.id.training_id);
-        TextView trainingLengthView = (TextView)trainingLay.findViewById(R.id.training_length);
-
         Training currTraining = trainings.get(position);
 
-        trainingIdView.setText("Programme " + currTraining.getId());
-        trainingLengthView.setText("length TBC");
+        TextView trainingIdView = (TextView)trainingLay.findViewById(R.id.training_id);
+        trainingIdView.setText("Programme " + currTraining.getId() + " : ");
+
+        TextView trainingLengthView = (TextView)trainingLay.findViewById(R.id.training_length);
+        trainingLengthView.setText(Integer.toString(currTraining.getLength()) + " min");
 
         //map the steps of the training
         LinearLayout stepsListLayout = (LinearLayout)trainingLay.findViewById(R.id.steps_list);

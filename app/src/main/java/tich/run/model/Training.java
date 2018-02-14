@@ -1,6 +1,7 @@
 package tich.run.model;
 
 import java.util.LinkedList;
+import java.util.ListIterator;
 
 public class Training {
 
@@ -32,5 +33,17 @@ public class Training {
 
     public void setSteps(LinkedList<Step> steps) {
         this.steps = steps;
+    }
+
+    public int getLength()
+    {
+        int length = 0;
+        ListIterator<Step> iter = steps.listIterator();
+        while (iter.hasNext())
+        {
+            Step step = iter.next();
+            length += step.getLength();
+        }
+        return length;
     }
 }

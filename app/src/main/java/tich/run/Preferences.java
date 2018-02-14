@@ -127,5 +127,11 @@ public class Preferences {
             editor.putString(TRAINING + "." + (i + 1), buff.toString());
             editor.commit();
         }
+        for (int i=trainings.size(); i<=10; i++)
+        {
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putString(TRAINING + "." + (i + 1), "");
+            editor.commit();
+        }
     }
 }
