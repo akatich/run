@@ -22,6 +22,7 @@ import java.util.ListIterator;
 import tich.run.Preferences;
 import tich.run.R;
 import tich.run.TrainingActivity;
+import tich.run.listener.StepDeleteListener;
 import tich.run.listener.StepLengthListener;
 import tich.run.listener.StepSpeedListener;
 
@@ -82,10 +83,22 @@ public class TrainingAdapter extends BaseAdapter {
             stepLayout.setLayoutParams(new LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.MATCH_PARENT,
                     Preferences.pxFromDp(40, activity)));
-            ((LinearLayout.LayoutParams)stepLayout.getLayoutParams()).leftMargin = Preferences.pxFromDp(30, activity);
             stepLayout.setGravity(Gravity.CENTER_VERTICAL);
 
+            ImageView imgDelete = new ImageView(activity);
+            imgDelete.setLayoutParams(new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.WRAP_CONTENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT));
+            ((LinearLayout.LayoutParams)imgDelete.getLayoutParams()).leftMargin = Preferences.pxFromDp(5, activity);
+            imgDelete.setImageResource(R.drawable.delete);
+            imgDelete.setOnClickListener(new StepDeleteListener(activity, position, step.getId() - 1));
+            stepLayout.addView(imgDelete);
+
             TextView stepIdView = new TextView(activity);
+            stepIdView.setLayoutParams(new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.WRAP_CONTENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT));
+            ((LinearLayout.LayoutParams)stepIdView.getLayoutParams()).leftMargin = Preferences.pxFromDp(20, activity);
             stepIdView.setTextColor(Color.parseColor("#FFFFFF99"));
             stepIdView.setText("Step " + step.getId() + " : ");
             stepLayout.addView(stepIdView);
