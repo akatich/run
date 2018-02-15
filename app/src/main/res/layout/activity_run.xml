@@ -1,0 +1,40 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical"
+    android:background="#FF330000"
+    tools:context=".RunActivity" >
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="20dp"
+        android:gravity="center_horizontal"
+        android:background="@null"
+        android:src="@drawable/play"
+        android:onClick="play"/>
+
+    <TextView
+        android:id="@+id/current_song_title"
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:layout_marginTop="10dp"
+        android:textColor="#FFFFFF99"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:singleLine="true"/>
+
+    <TextView
+        android:id="@+id/current_song_artist"
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:textColor="#FFFFFF99"
+        android:textSize="18sp"
+        android:singleLine="true" />
+
+    <ViewFlipper android:id="@+id/view_flipper"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+</LinearLayout>

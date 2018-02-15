@@ -1,5 +1,6 @@
 package tich.run.listener;
 
+import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import tich.run.Preferences;
@@ -8,10 +9,10 @@ import tich.run.model.Step;
 
 public class StepLengthListener implements TextWatcher {
 
-    private TrainingActivity activity;
+    private AppCompatActivity activity;
     private Step step;
 
-    public StepLengthListener(TrainingActivity activity, Step step)
+    public StepLengthListener(AppCompatActivity activity, Step step)
     {
         this.activity = activity;
         this.step = step;

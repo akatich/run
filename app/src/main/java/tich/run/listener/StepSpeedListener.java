@@ -1,5 +1,6 @@
 package tich.run.listener;
 
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -9,10 +10,10 @@ import tich.run.model.Step;
 
 public class StepSpeedListener implements View.OnClickListener {
 
-    private TrainingActivity activity;
+    private AppCompatActivity activity;
     private Step step;
 
-    public StepSpeedListener(TrainingActivity activity, Step step)
+    public StepSpeedListener(AppCompatActivity activity, Step step)
     {
         this.activity = activity;
         this.step = step;

@@ -94,6 +94,8 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case R.id.step3:
                 //step3
+                intent = new Intent(this, RunActivity.class);
+                startActivity(intent);
                 break;
             /*case R.id.action_end:
                 stopService(playIntent);

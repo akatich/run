@@ -24,10 +24,14 @@
             </intent-filter>
         </activity>
         <activity android:name=".TrainingActivity">
-            android:parentActivityName=".MainActivity" >
-            <meta-data
+             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity" />
+        </activity>
+        <activity android:name=".RunActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".TrainingActivity" />
         </activity>
 
         <service android:name="tich.run.MusicService" />

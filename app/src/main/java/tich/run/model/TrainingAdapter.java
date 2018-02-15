@@ -1,6 +1,7 @@
 package tich.run.model;
 
 import android.graphics.Color;
+import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
@@ -30,10 +31,10 @@ public class TrainingAdapter extends BaseAdapter {
 
     private ArrayList<Training> trainings;
     private LayoutInflater trainingInf;
-    private TrainingActivity activity;
+    private AppCompatActivity activity;
     private StepAdapter stepAdt;
 
-    public TrainingAdapter(TrainingActivity ta, ArrayList<Training> theTrainings){
+    public TrainingAdapter(AppCompatActivity ta, ArrayList<Training> theTrainings){
         trainings = theTrainings;
         activity = ta;
         trainingInf = LayoutInflater.from(activity);
@@ -79,6 +80,7 @@ public class TrainingAdapter extends BaseAdapter {
         while (iter.hasNext())
         {
             Step step = iter.next();
+
             LinearLayout stepLayout = new LinearLayout(activity);
             stepLayout.setLayoutParams(new LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.MATCH_PARENT,
@@ -152,38 +154,39 @@ public class TrainingAdapter extends BaseAdapter {
             stepsListLayout.addView(stepLayout);
         }
 
-        LinearLayout addNewStepLayout = new LinearLayout(activity);
-        addNewStepLayout.setLayoutParams(new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                Preferences.pxFromDp(35, activity)));
-        ((LinearLayout.LayoutParams)addNewStepLayout.getLayoutParams()).leftMargin = Preferences.pxFromDp(30, activity);
-        addNewStepLayout.setGravity(Gravity.CENTER_VERTICAL);
-        addNewStepLayout.setOnClickListener(new View.OnClickListener()  {
-            @Override
-            public void onClick(View v)
-            {
-                activity.addStep(v);
-            }
-        });
+        if (activity instanceof  TrainingActivity) {
+            LinearLayout addNewStepLayout = new LinearLayout(activity);
+            addNewStepLayout.setLayoutParams(new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    Preferences.pxFromDp(35, activity)));
+            ((LinearLayout.LayoutParams) addNewStepLayout.getLayoutParams()).leftMargin = Preferences.pxFromDp(30, activity);
+            addNewStepLayout.setGravity(Gravity.CENTER_VERTICAL);
+            addNewStepLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ((TrainingActivity)activity).addStep(v);
+                }
+            });
 
-        ImageView imgPlus = new ImageView(activity);
-        imgPlus.setLayoutParams(new LinearLayout.LayoutParams(
-                Preferences.pxFromDp(25, activity),
-                Preferences.pxFromDp(25, activity)));
-        imgPlus.setImageResource(R.drawable.plus);
-        addNewStepLayout.addView(imgPlus);
+            ImageView imgPlus = new ImageView(activity);
+            imgPlus.setLayoutParams(new LinearLayout.LayoutParams(
+                    Preferences.pxFromDp(25, activity),
+                    Preferences.pxFromDp(25, activity)));
+            imgPlus.setImageResource(R.drawable.plus);
+            addNewStepLayout.addView(imgPlus);
 
-        TextView addNewStep = new TextView(activity);
-        addNewStep.setLayoutParams(new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.WRAP_CONTENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT));
-        ((LinearLayout.LayoutParams)addNewStep.getLayoutParams()).leftMargin = 40;
-        addNewStep.setTextColor(Color.parseColor("#FFFFFF99"));
-        addNewStep.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
-        addNewStep.setText("Nouvelle étape");
-        addNewStepLayout.addView(addNewStep);
+            TextView addNewStep = new TextView(activity);
+            addNewStep.setLayoutParams(new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.WRAP_CONTENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT));
+            ((LinearLayout.LayoutParams) addNewStep.getLayoutParams()).leftMargin = 40;
+            addNewStep.setTextColor(Color.parseColor("#FFFFFF99"));
+            addNewStep.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
+            addNewStep.setText("Nouvelle étape");
+            addNewStepLayout.addView(addNewStep);
 
-        stepsListLayout.addView(addNewStepLayout);
+            stepsListLayout.addView(addNewStepLayout);
+        }
 
         //set position as tag
         trainingLay.setTag(position);

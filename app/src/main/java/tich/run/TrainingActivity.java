@@ -52,7 +52,8 @@ public class TrainingActivity extends AppCompatActivity {
                 //step2
                 break;
             case R.id.step3:
-                //step3
+                intent = new Intent(this, RunActivity.class);
+                startActivity(intent);
                 break;
         }
         return super.onOptionsItemSelected(item);
