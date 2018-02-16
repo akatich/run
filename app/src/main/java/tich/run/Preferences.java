@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
 
+import tich.run.model.Song;
 import tich.run.model.Step;
 import tich.run.model.Training;
 
@@ -19,25 +20,15 @@ public class Preferences {
     private final static String SONGS = "tich.run.songs";
     private final static String TRAINING = "tich.run.training";
     private ArrayList<Training> trainings = new ArrayList<Training>();
+    private ArrayList<Song> songList;
+    private ArrayList<Song> songListUndefined = new ArrayList<Song>();
+    private ArrayList<Song> songListSlow = new ArrayList<Song>();
+    private ArrayList<Song> songListMedium = new ArrayList<Song>();
+    private ArrayList<Song> songListFast = new ArrayList<Song>();
 
     private Preferences()
     {
         loadTrainings();
-
-        /*Training t1 = new Training();
-        Step s1 = new Step();
-        s1.setId(5);
-        t1.addStep(s1);
-        trainings.add(t1);
-
-        Training t2 = new Training();
-        Step s2 = new Step();
-        s2.setId(3);
-        t2.addStep(s2);
-        Step s3 = new Step();
-        s3.setId(7);
-        t2.addStep(s3);
-        trainings.add(t2);*/
     }
 
     public static synchronized Preferences getPreferences()
@@ -133,5 +124,54 @@ public class Preferences {
             editor.putString(TRAINING + "." + (i + 1), "");
             editor.commit();
         }
+    }
+
+    public ArrayList<Song> getSongList() {
+        return songList;
+    }
+
+    public void setSongList(ArrayList<Song> songList) {
+        this.songList = songList;
+    }
+
+    public void sortSongs()
+    {
+        ListIterator<Song> iter = songList.listIterator();
+        while (iter.hasNext())
+        {
+            Song song = iter.next();
+            switch (song.getSpeed())
+            {
+                case Song.UNDEFINED:
+                    songListUndefined.add(song);
+                    break;
+                case Song.SLOW:
+                    songListSlow.add(song);
+                    break;
+                case Song.MEDIUM:
+                    songListMedium.add(song);
+                    break;
+                case Song.FAST:
+                    songListFast.add(song);
+                    break;
+            }
+        }
+        MainActivity.musicSrv.indexSongs();
+    }
+
+    public ArrayList<Song> getSongListUndefined() {
+        return songListUndefined;
+    }
+
+    public ArrayList<Song> getSongListSlow() {
+        return songListSlow;
+    }
+
+    public ArrayList<Song> getSongListMedium() {
+        return songListMedium;
+    }
+
+    public ArrayList<Song> getSongListFast() {
+        return songListFast;
     }
 }

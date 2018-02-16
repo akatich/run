@@ -2,7 +2,7 @@ package tich.run.model;
 
 public class Song {
 
-    private long id;
+    private int id;
     private String title;
     private String artist;
     private int speed;
@@ -11,25 +11,25 @@ public class Song {
     public final static int MEDIUM = 2;
     public final static int FAST = 3;
 
-    public Song(long songId, String songTitle, String songArtist) {
+    public Song(int songId, String songTitle, String songArtist) {
         id=songId;
         title=songTitle;
         artist=songArtist;
         speed = UNDEFINED;
     }
 
-    public Song(long songId, String songTitle, String songArtist, int songSpeed) {
+    public Song(int songId, String songTitle, String songArtist, int songSpeed) {
         id=songId;
         title=songTitle;
         artist=songArtist;
         speed = songSpeed;
     }
 
-    public long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(int id) {
         this.id = id;
     }
 

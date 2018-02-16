@@ -7,7 +7,6 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -26,13 +25,12 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.view.MenuItem;
 import android.view.View;
-import tich.run.MusicService.MusicBinder;
 
 public class MainActivity extends AppCompatActivity {
 
     private ArrayList<Song> songList;
     private ListView songView;
-    private MusicService musicSrv;
+    public static MusicService musicSrv;
     private Intent playIntent;
     private boolean musicBound=false;
     //connect to the service
@@ -97,11 +95,6 @@ public class MainActivity extends AppCompatActivity {
                 intent = new Intent(this, RunActivity.class);
                 startActivity(intent);
                 break;
-            /*case R.id.action_end:
-                stopService(playIntent);
-                musicSrv=null;
-                System.exit(0);
-                break;*/
         }
         return super.onOptionsItemSelected(item);
     }
@@ -161,7 +154,7 @@ public class MainActivity extends AppCompatActivity {
                         (android.provider.MediaStore.Audio.Media.ARTIST);
                 //add songs to list
                 do {
-                    long thisId = musicCursor.getLong(idColumn);
+                    int thisId = musicCursor.getInt(idColumn);
                     String thisTitle = musicCursor.getString(titleColumn);
                     String thisArtist = musicCursor.getString(artistColumn);
                     int songSpeed = Preferences.getPreferences(this).getSongSpeed(thisTitle);
@@ -169,6 +162,8 @@ public class MainActivity extends AppCompatActivity {
                 }
                 while (musicCursor.moveToNext());
             }
+
+            Preferences.getPreferences(this).setSongList(songList);
         }
         catch (Exception e)
         {

@@ -1,58 +1,38 @@
 package tich.run;
 
-import android.Manifest;
-import android.content.ComponentName;
-import android.content.ContentResolver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.ServiceConnection;
-import android.content.pm.PackageManager;
-import android.database.Cursor;
 import android.graphics.Color;
-import android.graphics.drawable.GradientDrawable;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.IBinder;
-import android.provider.MediaStore;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.text.InputType;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.ViewFlipper;
-
 import java.util.ArrayList;
 import tich.run.model.Song;
 import tich.run.model.Step;
 import tich.run.model.Training;
-import tich.run.model.TrainingAdapter;
+
 
 public class RunActivity extends AppCompatActivity {
 
     private ArrayList<Training> trainingList;
-    private ListView trainingView;
-    private TrainingAdapter trainingAdt;
-    private ArrayList<Song> songList;
-    private ListView songView;
-    private MusicService musicSrv;
-    private Intent playIntent;
     private ViewFlipper viewFlipper;
+    private MyTimerTask timer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_run);
+
+        Preferences.getPreferences(this).sortSongs();
 
         buildLayout();
     }
@@ -67,6 +47,7 @@ public class RunActivity extends AppCompatActivity {
             Training training = trainingList.get(i);
 
             LinearLayout verticalLayout = new LinearLayout(this);
+            verticalLayout.setTag(training);
             verticalLayout.setLayoutParams(new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.MATCH_PARENT));
@@ -219,7 +200,11 @@ public class RunActivity extends AppCompatActivity {
 
     public void play(View v)
     {
-
+        //initialize the TimerTask's job
+        timer = new MyTimerTask(this);
+        Training training = (Training) viewFlipper.getCurrentView().getTag();
+        timer.setSteps(training.getSteps());
+        timer.start();
     }
 
 }

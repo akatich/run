@@ -5,9 +5,9 @@ import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.IBinder;
 import java.util.ArrayList;
+import java.util.HashMap;
 import android.content.ContentUris;
 import android.media.AudioManager;
-import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Binder;
 import android.os.PowerManager;
@@ -22,6 +22,7 @@ public class MusicService extends Service implements
     private MediaPlayer player;
     //song list
     private ArrayList<Song> songs;
+    private HashMap<String, String> songsPositionFromId;
     //current position
     private int songPosn;
     private final IBinder musicBind = new MusicBinder();
@@ -124,5 +125,20 @@ public class MusicService extends Service implements
     public boolean isPlaying()
     {
         return player.isPlaying();
+    }
+
+    public void indexSongs()
+    {
+        songsPositionFromId = new HashMap<String, String>(songs.size());
+        for (int i=0; i<songs.size(); i++)
+        {
+            Song song = songs.get(i);
+            songsPositionFromId.put(Integer.toString(song.getId()), Integer.toString(i));
+        }
+    }
+
+    public void setSongId(int songId)
+    {
+        songPosn = Integer.parseInt(songsPositionFromId.get(Integer.toString(songId)));
     }
 }
