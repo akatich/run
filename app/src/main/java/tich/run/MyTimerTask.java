@@ -1,5 +1,6 @@
 package tich.run;
 
+import android.media.MediaPlayer;
 import android.os.SystemClock;
 import android.widget.Chronometer;
 import android.widget.TextView;
@@ -10,7 +11,7 @@ import java.util.LinkedList;
 import tich.run.model.Song;
 import tich.run.model.Step;
 
-public class MyTimerTask
+public class MyTimerTask extends MediaPlayer
 {
     private RunActivity activity;
     private LinkedList<Step> steps;
@@ -32,7 +33,7 @@ public class MyTimerTask
     private TextView songArtistView;
 
 
-    public MyTimerTask(final RunActivity activity)
+    public void init(final RunActivity activity)
     {
         this.activity = activity;
         runStatus = (TextView) activity.findViewById(R.id.run_status);
@@ -50,35 +51,39 @@ public class MyTimerTask
             @Override
             public void onChronometerTick(Chronometer chronometer)
             {
-                long elapsedMillis = SystemClock.elapsedRealtime() - chronometer.getBase();
-                if(elapsedMillis > threshold * 1000 * 60)
+            }
+        });
+    }
+
+    public void checkChrono()
+    {
+        long elapsedMillis = SystemClock.elapsedRealtime() - chrono.getBase();
+        if(elapsedMillis > threshold * 1000 * 60)
+        {
+            runStatus.setText("Step " + currentStep.getId() + " done !");
+            stepPosition++;
+            if (stepPosition == steps.size())
+                chrono.stop();
+            else {
+                boolean changeMusic = false;
+                if (currentStep.getSpeed() != steps.get(stepPosition).getSpeed())
+                    changeMusic = true;
+                currentStep = steps.get(stepPosition);
+                threshold += currentStep.getLength();
+                if (changeMusic)
                 {
-                    runStatus.setText("Step " + currentStep.getId() + " done !");
-                    stepPosition++;
-                    if (stepPosition == steps.size())
-                        chrono.stop();
-                    else {
-                        boolean changeMusic = false;
-                        if (currentStep.getSpeed() != steps.get(stepPosition).getSpeed())
-                            changeMusic = true;
-                        currentStep = steps.get(stepPosition);
-                        threshold += currentStep.getLength();
-                        if (changeMusic)
-                        {
-                            changeMusic(currentStep.getSpeed());
-                        }
-                        else
-                        {
-                            stillPlay();
-                        }
-                    }
+                    changeMusic(currentStep.getSpeed());
                 }
-                else if (elapsedMillis > 1000)
+                else
                 {
                     stillPlay();
                 }
             }
-        });
+        }
+        else if (elapsedMillis > 1000)
+        {
+            stillPlay();
+        }
     }
 
     public void stillPlay()
@@ -112,7 +117,7 @@ public class MyTimerTask
     }
 
 
-    public void start()
+    public void startPlaySong()
     {
         currentStep = steps.getFirst();
         threshold = currentStep.getLength();
@@ -154,7 +159,7 @@ public class MyTimerTask
         MainActivity.musicSrv.playSong();
     }
 
-    public void stop()
+    public void stopPlaySong()
     {
         chrono.stop();
     }

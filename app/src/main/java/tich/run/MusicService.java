@@ -13,19 +13,22 @@ import android.os.Binder;
 import android.os.PowerManager;
 import android.util.Log;
 import tich.run.model.Song;
+import tich.run.model.Training;
 
 public class MusicService extends Service implements
         MediaPlayer.OnPreparedListener, MediaPlayer.OnErrorListener,
         MediaPlayer.OnCompletionListener {
 
     //media player
-    private MediaPlayer player;
+    private MyTimerTask player;
     //song list
     private ArrayList<Song> songs;
     private HashMap<String, String> songsPositionFromId;
     //current position
     private int songPosn;
     private final IBinder musicBind = new MusicBinder();
+
+
 
     public void onCreate()
     {
@@ -34,7 +37,7 @@ public class MusicService extends Service implements
         //initialize position
         songPosn=0;
         //create player
-        player = new MediaPlayer();
+        player = new MyTimerTask();
 
         initMusicPlayer();
     }
@@ -50,13 +53,20 @@ public class MusicService extends Service implements
         player.setOnErrorListener(this);
     }
 
+    public void initTimer(RunActivity activity, Training training)
+    {
+        player.init(activity);
+        player.setSteps(training.getSteps());
+        player.startPlaySong();
+    }
+
     public void setList(ArrayList<Song> theSongs){
         songs=theSongs;
     }
 
     @Override
     public void onCompletion(MediaPlayer mp) {
-
+       player.checkChrono();
     }
 
     @Override

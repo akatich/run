@@ -25,7 +25,6 @@ public class RunActivity extends AppCompatActivity {
 
     private ArrayList<Training> trainingList;
     private ViewFlipper viewFlipper;
-    private MyTimerTask timer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -189,11 +188,6 @@ public class RunActivity extends AppCompatActivity {
             case R.id.step3:
                 //step3
                 break;
-            /*case R.id.action_end:
-                stopService(playIntent);
-                musicSrv=null;
-                System.exit(0);
-                break;*/
         }
         return super.onOptionsItemSelected(item);
     }
@@ -201,10 +195,8 @@ public class RunActivity extends AppCompatActivity {
     public void play(View v)
     {
         //initialize the TimerTask's job
-        timer = new MyTimerTask(this);
         Training training = (Training) viewFlipper.getCurrentView().getTag();
-        timer.setSteps(training.getSteps());
-        timer.start();
+        MainActivity.musicSrv.initTimer(this, training);
     }
 
 }
