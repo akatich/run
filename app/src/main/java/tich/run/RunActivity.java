@@ -3,6 +3,7 @@ package tich.run;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -25,6 +26,28 @@ public class RunActivity extends AppCompatActivity {
 
     private ArrayList<Training> trainingList;
     private ViewFlipper viewFlipper;
+    private TextView chronoView;
+    private ImageView imgPlayView;
+    private long startTime = 0;
+    private long stopTime = 0;
+    private boolean trainingDone = false;
+    private Handler timerHandler = new Handler();
+    private Runnable timerRunnable = new Runnable() {
+
+        @Override
+        public void run() {
+            long millis = System.currentTimeMillis() - startTime;
+            int seconds = (int) (millis / 1000);
+            int minutes = seconds / 60;
+            seconds = seconds % 60;
+
+            chronoView.setText(String.format("%d:%02d", minutes, seconds));
+
+            MainActivity.musicSrv.checkChrono(millis);
+
+            timerHandler.postDelayed(this, 500);
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,10 +56,13 @@ public class RunActivity extends AppCompatActivity {
 
         Preferences.getPreferences(this).sortSongs();
 
-        buildLayout();
+        chronoView = (TextView) findViewById(R.id.chrono);
+        imgPlayView = (ImageView) findViewById(R.id.img_play);
+
+        buildFlipperLayout();
     }
 
-    private void buildLayout()
+    private void buildFlipperLayout()
     {
         viewFlipper = findViewById(R.id.view_flipper);
 
@@ -194,9 +220,33 @@ public class RunActivity extends AppCompatActivity {
 
     public void play(View v)
     {
-        //initialize the TimerTask's job
-        Training training = (Training) viewFlipper.getCurrentView().getTag();
-        MainActivity.musicSrv.initTimer(this, training);
+        if (imgPlayView.getTag().toString().equals("stop")) {
+            timerHandler.removeCallbacks(timerRunnable);
+            stopTime = System.currentTimeMillis();
+            imgPlayView.setTag("start");
+            imgPlayView.setImageResource(R.drawable.play);
+
+            if (MainActivity.musicSrv.isPlaying())
+                MainActivity.musicSrv.pauseSong();
+        }
+        else
+        {
+            if (stopTime == 0)
+            {
+                startTime = System.currentTimeMillis();
+                Training training = (Training) viewFlipper.getCurrentView().getTag();
+                MainActivity.musicSrv.initTimer(this, training);
+            }
+            else
+            {
+                startTime = System.currentTimeMillis() - (stopTime - startTime);
+                if (!MainActivity.musicSrv.isPlaying())
+                    MainActivity.musicSrv.resumeSong();
+            }
+            timerHandler.postDelayed(timerRunnable, 0);
+            imgPlayView.setTag("stop");
+            imgPlayView.setImageResource(R.drawable.pause);
+        }
     }
 
 }

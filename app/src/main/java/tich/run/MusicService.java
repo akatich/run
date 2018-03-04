@@ -2,7 +2,10 @@ package tich.run;
 
 import android.app.Service;
 import android.content.Intent;
+import android.media.AudioAttributes;
 import android.media.MediaPlayer;
+import android.media.SoundPool;
+import android.os.Build;
 import android.os.IBinder;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -27,7 +30,8 @@ public class MusicService extends Service implements
     //current position
     private int songPosn;
     private final IBinder musicBind = new MusicBinder();
-
+    private SoundPool sp;
+    int trainingDoneSound;
 
 
     public void onCreate()
@@ -40,6 +44,27 @@ public class MusicService extends Service implements
         player = new MyTimerTask();
 
         initMusicPlayer();
+        initSoundPool();
+    }
+
+    private void initSoundPool()
+    {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+        {
+            AudioAttributes attr = new AudioAttributes.Builder()
+                    .setUsage(AudioAttributes.USAGE_GAME)
+                    .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                    .build();
+            sp = new SoundPool.Builder()
+                    .setAudioAttributes(attr)
+                    .setMaxStreams(5)
+                    .build();
+        }
+        else
+        {
+            sp = new SoundPool(5, AudioManager.STREAM_MUSIC, 0);
+        }
+        trainingDoneSound = sp.load(this, R.raw.training_done, 1);
     }
 
     public void initMusicPlayer()
@@ -60,13 +85,28 @@ public class MusicService extends Service implements
         player.startPlaySong();
     }
 
+    public void alertTrainingDone()
+    {
+        // pause play of current song
+        player.pause();
+
+        // play sound to alert training is done
+        sp.play(trainingDoneSound, 1, 1, 1, 0, 1f);
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException e) {}
+
+        //resume play of current song
+        player.start();
+    }
+
     public void setList(ArrayList<Song> theSongs){
         songs=theSongs;
     }
 
     @Override
     public void onCompletion(MediaPlayer mp) {
-       player.checkChrono();
+       player.stillPlay();
     }
 
     @Override
@@ -116,6 +156,21 @@ public class MusicService extends Service implements
             Log.e("MUSIC SERVICE", "Error setting data source", e);
         }
         player.prepareAsync();
+    }
+
+    public void pauseSong()
+    {
+        player.pause();
+    }
+
+    public void resumeSong()
+    {
+        player.start();
+    }
+
+    public void checkChrono(long elapsedMillis)
+    {
+        player.checkChrono(elapsedMillis);
     }
 
     public void stopSong()

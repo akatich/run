@@ -1,8 +1,6 @@
 package tich.run;
 
 import android.media.MediaPlayer;
-import android.os.SystemClock;
-import android.widget.Chronometer;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -15,12 +13,12 @@ public class MyTimerTask extends MediaPlayer
 {
     private RunActivity activity;
     private LinkedList<Step> steps;
-    private Chronometer chrono;
+    private TextView chrono;
     private Step currentStep;
     private int stepPosition = 0;
     private TextView runStatus;
     private int threshold;
-    public static MusicService musicSrv;
+    private boolean trainingDone = false;
     private ArrayList<Song> songListUndefined;
     private int songUndefinedPos = 0;
     private ArrayList<Song> songListSlow;
@@ -47,24 +45,24 @@ public class MyTimerTask extends MediaPlayer
         songArtistView = activity.findViewById(R.id.current_song_artist);
 
         chrono = activity.findViewById(R.id.chrono);
-        chrono.setOnChronometerTickListener(new Chronometer.OnChronometerTickListener() {
-            @Override
-            public void onChronometerTick(Chronometer chronometer)
-            {
-            }
-        });
     }
 
-    public void checkChrono()
+    public void checkChrono(long elapsedMillis)
     {
-        long elapsedMillis = SystemClock.elapsedRealtime() - chrono.getBase();
-        if(elapsedMillis > threshold * 1000 * 60)
+        if(!trainingDone && elapsedMillis > threshold * 1000 * 60)
         {
             runStatus.setText("Step " + currentStep.getId() + " done !");
             stepPosition++;
             if (stepPosition == steps.size())
-                chrono.stop();
-            else {
+            {
+                // training is complete
+                trainingDone = true;
+                runStatus.setText("Training done !");
+                MainActivity.musicSrv.alertTrainingDone();
+            }
+            else
+            {
+                // training is not complete
                 boolean changeMusic = false;
                 if (currentStep.getSpeed() != steps.get(stepPosition).getSpeed())
                     changeMusic = true;
@@ -74,81 +72,57 @@ public class MyTimerTask extends MediaPlayer
                 {
                     changeMusic(currentStep.getSpeed());
                 }
-                else
-                {
-                    stillPlay();
-                }
             }
-        }
-        else if (elapsedMillis > 1000)
-        {
-            stillPlay();
         }
     }
 
     public void stillPlay()
     {
-        if (!MainActivity.musicSrv.isPlaying())
-        {
-            switch (currentStep.getSpeed())
-            {
-                case Song.UNDEFINED:
-                    songUndefinedPos++;
-                    Song song = songListUndefined.get(songUndefinedPos);
-                    playSongwithSongId(song);
-                    break;
-                case Song.SLOW:
-                    songSlowPos++;
-                    song = songListSlow.get(songSlowPos);
-                    playSongwithSongId(song);
-                    break;
-                case Song.MEDIUM:
-                    songMediumPos++;
-                    song = songListMedium.get(songMediumPos);
-                    playSongwithSongId(song);
-                    break;
-                case Song.FAST:
-                    songFastPos++;
-                    song = songListFast.get(songFastPos);
-                    playSongwithSongId(song);
-                    break;
-            }
-        }
+        playSong(currentStep.getSpeed());
     }
 
+    private void changeMusic(int songSpeed)
+    {
+        playSong(songSpeed);
+    }
+
+    public void playSong(int songSpeed)
+    {
+        switch (songSpeed)
+        {
+            case Song.UNDEFINED:
+                if (songUndefinedPos == songListUndefined.size())
+                    songUndefinedPos = 0;
+                Song song = songListUndefined.get(songUndefinedPos++);
+                playSongwithSongId(song);
+                break;
+            case Song.SLOW:
+                if (songSlowPos == songListSlow.size())
+                    songSlowPos = 0;
+                song = songListSlow.get(songSlowPos++);
+                playSongwithSongId(song);
+                break;
+            case Song.MEDIUM:
+                if (songMediumPos == songListMedium.size())
+                    songMediumPos = 0;
+                song = songListMedium.get(songMediumPos++);
+                playSongwithSongId(song);
+                break;
+            case Song.FAST:
+                if (songFastPos == songListFast.size())
+                    songFastPos = 0;
+                song = songListFast.get(songFastPos++);
+                playSongwithSongId(song);
+                break;
+        }
+    }
 
     public void startPlaySong()
     {
         currentStep = steps.getFirst();
         threshold = currentStep.getLength();
         changeMusic(currentStep.getSpeed());
-
-        // start chrono
-        chrono.setBase(SystemClock.elapsedRealtime());
-        chrono.start();
-    }
-
-    private void changeMusic(int songSpeed)
-    {
-        switch (songSpeed)
-        {
-            case Song.UNDEFINED:
-                Song song = songListUndefined.get(songUndefinedPos);
-                playSongwithSongId(song);
-                break;
-            case Song.SLOW:
-                song = songListSlow.get(songSlowPos);
-                playSongwithSongId(song);
-                break;
-            case Song.MEDIUM:
-                song = songListMedium.get(songMediumPos);
-                playSongwithSongId(song);
-                break;
-            case Song.FAST:
-                song = songListFast.get(songFastPos);
-                playSongwithSongId(song);
-                break;
-        }
+        trainingDone = false;
     }
 
     private void playSongwithSongId(Song song)
@@ -158,12 +132,6 @@ public class MyTimerTask extends MediaPlayer
         MainActivity.musicSrv.setSongId(song.getId());
         MainActivity.musicSrv.playSong();
     }
-
-    public void stopPlaySong()
-    {
-        chrono.stop();
-    }
-
 
     public void setSteps(LinkedList<Step> steps) {
         this.steps = steps;
